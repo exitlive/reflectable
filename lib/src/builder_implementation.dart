@@ -37,8 +37,7 @@ enum WarningKind {
   badMetadata,
   badReflectorClass,
   unrecognizedReflector,
-  unusedReflector,
-  missingAnalysisData
+  unusedReflector
 }
 
 class ReflectionWorld {
@@ -4309,10 +4308,9 @@ String _extractConstantCode(
       }
       Element staticElement = expression.staticElement;
       if (staticElement == null) {
-        _warn(
-            WarningKind.missingAnalysisData,
-            "Cannot obtain analysis result for expression $expression. "
-            "Some required library prefixes may be missing.");
+        // WORKAROUND for issue 172
+        _severe("Cannot obtain analysis result for expression $expression. "
+            "Required imports and library prefixes may be missing.");
         return "$expression";
       }
       LibraryElement libraryOfConstructor = expression.staticElement.library;
@@ -4340,10 +4338,9 @@ String _extractConstantCode(
       if (Identifier.isPrivateName(expression.name)) {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _warn(
-              WarningKind.missingAnalysisData,
-              "Cannot obtain analysis result for expression $expression. "
-              "Some required library prefixes may be missing.");
+          // WORKAROUND for issue 172
+          _severe("Cannot obtain analysis result for expression $expression. "
+              "Required imports and library prefixes may be missing.");
           return "$expression";
         }
         if (staticElement is PropertyAccessorElement) {
@@ -4359,10 +4356,9 @@ String _extractConstantCode(
       } else {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _warn(
-              WarningKind.missingAnalysisData,
-              "Cannot obtain analysis result for expression $expression. "
-              "Some required library prefixes may be missing.");
+          // WORKAROUND for issue 172
+          _severe("Cannot obtain analysis result for expression $expression. "
+              "Required imports and library prefixes may be missing.");
           return "$expression";
         }
         if (staticElement.library == null) {
