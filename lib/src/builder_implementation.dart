@@ -676,6 +676,7 @@ class _ReflectorDomain {
     // argument (say, "Hello, world!") and then test for that value, but that
     // would suppress an error in a very-hard-to-explain case, so that's safer
     // in a sense, but too weird.
+    _emitMessage("Line 679"); // DEBUG
     if (constructor.library.isDartCore &&
         constructor.enclosingElement.name == "List" &&
         constructor.name == "") {
@@ -733,6 +734,7 @@ class _ReflectorDomain {
       doRunArgument = doRunArgument + "b";
     }
 
+    _emitMessage("Line 755"); // DEBUG
     String prefix = importCollector._getPrefix(constructor.library);
     return ('($doRunArgument) => (${parameterParts.join(', ')}) => '
         '$doRunArgument ? new $prefix${_nameOfConstructor(constructor)}'
@@ -741,6 +743,7 @@ class _ReflectorDomain {
 
   /// The code of the const-construction of this reflector.
   String _constConstructionCode(_ImportCollector importCollector) {
+    _emitMessage("Line 764 $_reflector"); // DEBUG
     String prefix = importCollector._getPrefix(_reflector.library);
     if (_isPrivateName(_reflector.name)) {
       _severe("Cannot access private name `${_reflector.name}`", _reflector);
@@ -807,6 +810,7 @@ class _ReflectorDomain {
     // [parameters], [instanceGetterNames], and [instanceSetterNames].
     _libraries.items.forEach(uncheckedAddLibrary);
     classes.forEach((ClassElement classElement) {
+        _emitMessage("Line 831"); // DEBUG
       LibraryElement classLibrary = classElement.library;
       if (!libraries.items.any((_LibraryDomain libraryDomain) =>
           libraryDomain._libraryElement == classLibrary)) {
@@ -886,6 +890,7 @@ class _ReflectorDomain {
     if (_capabilities._impliesTypes && _capabilities._impliesTypeAnnotations) {
       void addClass(ClassElement classElement) {
         classes.add(classElement);
+        _emitMessage("Line 911"); // DEBUG
         LibraryElement classLibrary = classElement.library;
         if (!libraries.items
             .any((domain) => domain._libraryElement == classLibrary)) {
@@ -1398,6 +1403,7 @@ class _ReflectorDomain {
       if (mixinIndex == null) mixinIndex = constants.NO_CAPABILITY_INDEX;
     }
 
+    _emitMessage("Line 1424"); // DEBUG
     int ownerIndex = _capabilities._supportsLibraries
         ? libraries.indexOf(libraryMap[classElement.library])
         : constants.NO_CAPABILITY_INDEX;
@@ -1473,6 +1479,7 @@ class _ReflectorDomain {
           // no object can be an instance of an anonymous mixin application.
           yield "(o) => false";
         } else {
+          _emitMessage("Line 1500"); // DEBUG
           String prefix = importCollector._getPrefix(classElement.library);
           yield "(o) { return o is $prefix${classElement.name}";
 
@@ -1491,6 +1498,7 @@ class _ReflectorDomain {
                   !_isImportable(subtype, _generatedLibraryId, _resolver)) {
                 yield* helper(subtype);
               } else {
+                _emitMessage("Line 1519"); // DEBUG
                 String prefix = importCollector._getPrefix(subtype.library);
                 yield " && o is! $prefix${subtype.name}";
               }
@@ -1849,6 +1857,7 @@ class _ReflectorDomain {
           classElement.isPrivate) {
         return fail();
       }
+      _emitMessage("Line 1878"); // DEBUG
       String prefix = importCollector._getPrefix(classElement.library);
       if (classElement.typeParameters.isEmpty) {
         return "$prefix${classElement.name}";
@@ -1868,6 +1877,7 @@ class _ReflectorDomain {
     } else if (dartType is FunctionType) {
       if (dartType is FunctionTypeAliasElement) {
         FunctionTypeAliasElement element = dartType.element;
+        _emitMessage("Line 1898"); // DEBUG
         String prefix = importCollector._getPrefix(element.library);
         return "$prefix${element.name}";
       } else {
@@ -1970,6 +1980,7 @@ class _ReflectorDomain {
         // class.
         return 'const r.FakeType(r"${_qualifiedName(classElement)}")';
       }
+      _emitMessage("Line 2001"); // DEBUG
       String prefix = importCollector._getPrefix(classElement.library);
       if (classElement.typeParameters.isEmpty) {
         return "$prefix${classElement.name}";
@@ -1993,6 +2004,7 @@ class _ReflectorDomain {
       }
       if (dartType.element is FunctionTypeAliasElement) {
         FunctionTypeAliasElement element = dartType.element;
+        _emitMessage("Line 2025"); // DEBUG
         String prefix = importCollector._getPrefix(element.library);
         return "$prefix${element.name}";
       } else {
@@ -2036,6 +2048,7 @@ class _ReflectorDomain {
           classElement.isPrivate) {
         return 'const r.FakeType(r"${_qualifiedName(classElement)}")';
       }
+      _emitMessage("Line 2069"); // DEBUG
       String prefix = importCollector._getPrefix(classElement.library);
       return "$prefix${classElement.name}";
     } else {
@@ -2122,6 +2135,7 @@ class _ReflectorDomain {
       }));
     }
 
+    _emitMessage("Line 2156"); // DEBUG
     return 'new r.LibraryMirrorImpl(r"${library.name}", $uriCode, '
         '${_constConstructionCode(importCollector)}, '
         '$declarationsCode, $gettersCode, $settersCode, $metadataCode, '
@@ -2284,6 +2298,7 @@ class _SuperclassFixedPoint extends FixedPoint<ClassElement> {
       String name = subClass == null
           ? null
           : (element.isMixinApplication ? element.name : null);
+      _emitMessage("Line 2304"); // DEBUG
       ClassElement mixinApplication = MixinApplication(
           name, superclass, mixinClass, element.library, subClass);
       // We have already ensured that `workingSuperclass` is a
@@ -2341,6 +2356,7 @@ Set<ClassElement> _mixinApplicationsOfClasses(Set<ClassElement> classes) {
       String name = subClass == null
           ? null
           : (classElement.isMixinApplication ? classElement.name : null);
+      _emitMessage("Line 2362"); // DEBUG
       ClassElement mixinApplication = MixinApplication(
           name, superclass, mixinClass, classElement.library, subClass);
       mixinApplications.add(mixinApplication);
@@ -2435,6 +2451,7 @@ String _settingClosure(String setterName) {
 String _staticGettingClosure(_ImportCollector importCollector,
     ClassElement classElement, String getterName) {
   String className = classElement.name;
+  _emitMessage("Line 2457"); // DEBUG
   String prefix = importCollector._getPrefix(classElement.library);
   // Operators cannot be static.
   if (_isPrivateName(getterName)) {
@@ -2453,6 +2470,7 @@ String _staticSettingClosure(_ImportCollector importCollector,
   // The [setterName] includes the "=", remove it.
   String name = setterName.substring(0, setterName.length - 1);
   String className = classElement.name;
+  _emitMessage("Line 2476"); // DEBUG
   String prefix = importCollector._getPrefix(classElement.library);
   if (_isPrivateName(setterName)) {
     _severe("Cannot access private name $setterName", classElement);
@@ -3546,6 +3564,7 @@ class BuilderImplementation {
     /// it if none exists.
     _ReflectorDomain getReflectorDomain(ClassElement reflector) {
       return domains.putIfAbsent(reflector, () {
+        _emitMessage("Line 3570"); // DEBUG
         LibraryElement reflectorLibrary = reflector.library;
         _Capabilities capabilities =
             _capabilitiesOf(capabilityLibrary, reflector);
@@ -3584,6 +3603,7 @@ class BuilderImplementation {
               String name = subClass == null
                   ? null
                   : (type.isMixinApplication ? type.name : null);
+              _emitMessage("Line 3609"); // DEBUG
               MixinApplication mixinApplication = MixinApplication(
                   name, superclass, mixinElement, type.library, subClass);
               domain._classes.add(mixinApplication);
@@ -3592,6 +3612,7 @@ class BuilderImplementation {
           } else {
             domain._classes.add(type);
           }
+          _emitMessage("Line 3618"); // DEBUG
           addLibrary(type.library, reflector);
           // We need to ensure that the [importCollector] has indeed added
           // `type.library` (if we have no library capability `addLibrary` will
@@ -3760,6 +3781,7 @@ class BuilderImplementation {
       return ec.invokingCapability; // Error default.
     }
     ClassElement classElement = dartType.element;
+    _emitMessage("Line 3787"); // DEBUG
     if (classElement.library != capabilityLibrary) {
       _severe(
           errors.applyTemplate(errors.SUPER_ARGUMENT_WRONG_LIBRARY,
@@ -3925,6 +3947,7 @@ class BuilderImplementation {
     SuperConstructorInvocation superInvocation = initializers[0];
 
     ec.ReflectCapability capabilityOfExpression(Expression expression) {
+      _emitMessage("Line 3953"); // DEBUG
       return _capabilityOfExpression(
           capabilityLibrary, expression, reflector.library, constructorElement);
     }
@@ -4262,6 +4285,7 @@ String _extractConstantCode(
     AssetId generatedLibraryId,
     Resolver resolver) {
   String typeAnnotationHelper(TypeAnnotation typeName) {
+    _emitMessage("Line 4291"); // DEBUG
     LibraryElement library = typeName.type.element.library;
     String prefix = importCollector._getPrefix(library);
     return "$prefix$typeName";
@@ -4306,8 +4330,9 @@ String _extractConstantCode(
         _severe("Cannot access private name $constructor, "
             "needed for expression $expression");
       }
-      LibraryElement libraryOfConstructor = expression.staticElement.library;
-      if (_isImportableLibrary(
+      _emitMessage("Line 4336 $expression ${expression.staticElement}"); // DEBUG
+      LibraryElement libraryOfConstructor = expression.staticElement?.library;
+      if (libraryOfConstructor != null && _isImportableLibrary(
           libraryOfConstructor, generatedLibraryId, resolver)) {
         importCollector._addLibrary(libraryOfConstructor);
         String prefix = importCollector._getPrefix(libraryOfConstructor);
@@ -4342,6 +4367,7 @@ String _extractConstantCode(
         }
       } else {
         Element element = expression.staticElement;
+        _emitMessage("Line 4373"); // DEBUG
         if (element.library == null) {
           return "${element.name}";
         } else if (_isImportableLibrary(
@@ -4511,6 +4537,7 @@ String _extractMetadataCode(Element element, Resolver resolver,
       _fine("Ignoring unrepresentable metadata $annotationNode", element);
       continue;
     }
+    _emitMessage("Line 4543"); // DEBUG
     LibraryElement annotationLibrary = annotationNode.element.library;
     importCollector._addLibrary(annotationLibrary);
     String prefix = importCollector._getPrefix(annotationLibrary);
@@ -4809,6 +4836,7 @@ _ClassDomain _createClassDomain(ClassElement type, _ReflectorDomain domain) {
           .toList();
   List<PropertyAccessorElement> declaredAndImplicitAccessorsOfClass =
       _extractAccessors(domain._resolver, type, domain._capabilities).toList();
+  _emitMessage("Line 4842"); // DEBUG
   List<ConstructorElement> declaredConstructorsOfClass =
       _extractDeclaredConstructors(
               domain._resolver, type.library, type, domain._capabilities)
@@ -4832,6 +4860,7 @@ _ClassDomain _createClassDomain(ClassElement type, _ReflectorDomain domain) {
 // classes.
 bool _isImportable(
     Element element, AssetId generatedLibraryId, Resolver resolver) {
+  _emitMessage("Line 4866"); // DEBUG
   return _isImportableLibrary(element.library, generatedLibraryId, resolver);
 }
 
@@ -4990,6 +5019,7 @@ class MixinApplication implements ClassElement {
 
   @override
   bool operator ==(Object object) {
+    _emitMessage("Line 5025"); // DEBUG
     return object is MixinApplication &&
         superclass == object.superclass &&
         mixin == object.mixin &&
@@ -5019,10 +5049,12 @@ String _setterNameToGetterName(String name) {
 }
 
 String _qualifiedName(Element element) {
+  _emitMessage("Line 5055"); // DEBUG
   return element == null ? "null" : "${element.library.name}.${element.name}";
 }
 
 String _qualifiedFunctionName(FunctionElement functionElement) {
+  _emitMessage("Line 5060"); // DEBUG
   return functionElement == null
       ? "null"
       : "${functionElement.library.name}.${functionElement.name}";
@@ -5063,6 +5095,7 @@ EvaluationResultImpl _annotationEvaluationResult(
   EvaluationResultImpl result = annotation.evaluationResult;
   if (result == null) {
     // This is safe: The `library` will not be used again.
+    _emitMessage("Line 5101"); // DEBUG
     _resolvedLibraryOf(annotation.compilationUnit.library);
     result = annotation.evaluationResult;
   }
@@ -5081,6 +5114,7 @@ EvaluationResultImpl _constFieldEvaluationResult(
   EvaluationResultImpl result = constFieldElement.evaluationResult;
   if (result == null) {
     // This is safe: The `library` will not be used again.
+    _emitMessage("Line 5120"); // DEBUG
     _resolvedLibraryOf(constFieldElement.library);
     result = constFieldElement.evaluationResult;
   }
@@ -5099,6 +5133,7 @@ EvaluationResultImpl _constTopLevelVariableEvaluationResult(
   EvaluationResultImpl result = constTopLevelVariable.evaluationResult;
   if (result == null) {
     // This is safe: The `library` will not be used again.
+    _emitMessage("Line 5139"); // DEBUG
     _resolvedLibraryOf(constTopLevelVariable.library);
     result = constTopLevelVariable.evaluationResult;
   }
