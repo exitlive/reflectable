@@ -4308,8 +4308,9 @@ String _extractConstantCode(
       }
       Element staticElement = expression.staticElement;
       if (staticElement == null) {
-        _severe("Cannot obtain analysis result for expression $expression");
-        return "null";
+        _warn("Cannot obtain analysis result for expression $expression. "
+            "Some required library prefixes may be missing.");
+        return "$expression";
       }
       LibraryElement libraryOfConstructor = expression.staticElement.library;
       if (_isImportableLibrary(
@@ -4336,8 +4337,9 @@ String _extractConstantCode(
       if (Identifier.isPrivateName(expression.name)) {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _severe("Cannot obtain analysis result for expression $expression");
-          return "null";
+          _warn("Cannot obtain analysis result for expression $expression. "
+              "Some required library prefixes may be missing.");
+          return "$expression";
         }
         if (staticElement is PropertyAccessorElement) {
           VariableElement variable = staticElement.variable;
@@ -4352,8 +4354,9 @@ String _extractConstantCode(
       } else {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _severe("Cannot obtain analysis result for expression $expression");
-          return "null";
+          _warn("Cannot obtain analysis result for expression $expression. "
+              "Some required library prefixes may be missing.");
+          return "$expression";
         }
         if (staticElement.library == null) {
           return "${staticElement.name}";
