@@ -37,7 +37,8 @@ enum WarningKind {
   badMetadata,
   badReflectorClass,
   unrecognizedReflector,
-  unusedReflector
+  unusedReflector,
+  missingAnalysisData
 }
 
 class ReflectionWorld {
@@ -2205,8 +2206,8 @@ class _ReflectorDomain {
     FormalParameter parameterNode = parameterElement.computeNode();
     if (parameterNode is DefaultFormalParameter &&
         parameterNode.defaultValue != null) {
-      return _extractConstantCode(parameterNode.defaultValue,
-          importCollector, _generatedLibraryId, _resolver);
+      return _extractConstantCode(parameterNode.defaultValue, importCollector,
+          _generatedLibraryId, _resolver);
     } else if (parameterElement is DefaultFieldFormalParameterElementImpl) {
       Expression defaultValue = parameterElement.constantInitializer;
       if (defaultValue != null) {
@@ -4308,7 +4309,9 @@ String _extractConstantCode(
       }
       Element staticElement = expression.staticElement;
       if (staticElement == null) {
-        _warn("Cannot obtain analysis result for expression $expression. "
+        _warn(
+            WarningKind.missingAnalysisData,
+            "Cannot obtain analysis result for expression $expression. "
             "Some required library prefixes may be missing.");
         return "$expression";
       }
@@ -4337,7 +4340,9 @@ String _extractConstantCode(
       if (Identifier.isPrivateName(expression.name)) {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _warn("Cannot obtain analysis result for expression $expression. "
+          _warn(
+              WarningKind.missingAnalysisData,
+              "Cannot obtain analysis result for expression $expression. "
               "Some required library prefixes may be missing.");
           return "$expression";
         }
@@ -4354,7 +4359,9 @@ String _extractConstantCode(
       } else {
         Element staticElement = expression.staticElement;
         if (staticElement == null) {
-          _warn("Cannot obtain analysis result for expression $expression. "
+          _warn(
+              WarningKind.missingAnalysisData,
+              "Cannot obtain analysis result for expression $expression. "
               "Some required library prefixes may be missing.");
           return "$expression";
         }
